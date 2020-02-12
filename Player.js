@@ -64,11 +64,11 @@ class Player
                (this.y + this.h > p.y && this.y + this.h < p.y + p.h)
                )
                {
-                  if (this.x + this.w + this.xVelocity +1 < p.x)
+                  if (this.x + this.w + this.xVelocity + 1 < p.x)
                   {
                      this.x += this.xVelocity;
                   }
-                  else
+                  else if (this.x < p.x + p.w)
                   {
                      this.x = p.x - this.w - 1;
                   }
@@ -82,13 +82,32 @@ class Player
       if (this.isMovingLeft())
       {
          // First check for the wall
-         if (this.x - this.xVelocity - 5 > 0)
+         if (this.x + this.xVelocity - 1 > 0)
          {
             this.x += this.xVelocity;
          }
          else
          {
             this.x = 2;
+         }
+
+         for (let p of this.platforms)
+         {
+            // Check if players is within height of platform
+            if (
+               (this.y > p.y && this.y < p.y + p.h) ||
+               (this.y + this.h > p.y && this.y + this.h < p.y + p.h)
+               )
+               {
+                  if (this.x + this.xVelocity > p.x + p.w - 1)
+                  {
+                     this.x += this.xVelocity;
+                  }
+                  else if (this.x + this.w > p.x)
+                  {
+                     this.x = p.x + p.w + 1;
+                  }
+               }
          }
       }
    }

@@ -4,7 +4,7 @@ let platforms = [];
 function setup()
 {
    createCanvas(400, 300);
-   player = new Player(170, height-141, 20, 20, platforms);
+   player = new Player(260, height-141, 20, 20, platforms);
 
    platforms.push(new Platform(100, 100, 50, 10));
    platforms.push(new Platform(100, height - 60, 50, 10));

@@ -10,8 +10,8 @@ class Platform
 
    show()
    {
-      fill(255, 255, 0);
-      noStroke();
+      fill("brown");
+      stroke("black");
       rect(this.x, this.y, this.w, this.h);
    }
 

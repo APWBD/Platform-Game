@@ -14,12 +14,18 @@ class Player
       this.gChange = 0.1;
       this.gMax = 5;
       this.onPlatform = false;
+      this.numberCoins = 0;
+   }
+
+   addCoin(amount)
+   {
+      this.numberCoins += amount;
    }
 
    show()
    {
-      fill(255);
-      noStroke();
+      fill("grey");
+      stroke("black");
       rect(this.x, this.y, this.w, this.h);
    }
 

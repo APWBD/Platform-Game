@@ -3,13 +3,18 @@ class Coin extends Item
    constructor(x, y, w, h)
    {
       super(x,y, w, h);
+      this.taken = false;
    }
 
    show()
    {
-      noStroke();
-      fill("gold");
-      circle(this.x, this.y, this.w);
+      if (!this.taken)
+      {
+         stroke("black");
+         strokeWeight(1);
+         fill("gold");
+         circle(this.x, this.y, this.w);
+      }
    }
 
    checkCollision(p)
@@ -25,6 +30,9 @@ class Coin extends Item
       let dx = closestX - this.x;
       let dy = closestY - this.y;
 
-      return Math.sqrt(dx*dx + dy*dy) <= radius;
+      let collision = Math.sqrt(dx*dx + dy*dy) <= radius;
+      if (collision) this.taken = true;
+
+      return collision;
    }
 }

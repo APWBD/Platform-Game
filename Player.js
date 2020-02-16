@@ -10,8 +10,10 @@ class Player
       this.xVelocity = 0;
       this.yVelocity = 0;
       this.speed = 3;
-      this.jumpHeight = this.h * 2;
-      this.g = 1.5;
+      this.jumpVelocity = 4;
+      this.gChange = 0.1;
+      this.gMax = 5;
+      this.onPlatform = false;
    }
 
    show()
@@ -23,15 +25,23 @@ class Player
 
    move()
    {
+      if (!this.onPlatform)
+      {
+         if (this.yVelocity + this.gChange < this.gMax)
+         {
+            this.yVelocity += this.gChange;
+         }
+      }
+
       this.moveRight();
       this.moveLeft();
-
+      this.moveDown();
+      this.moveUp();
    }
 
    gravity()
    {
-      this.checkYPlatform();
-      if (this.noYObstacle())
+      if (!this.isGrounded())
       {
          this.y += this.g;
       }
@@ -40,6 +50,40 @@ class Player
    isGrounded()
    {
       return (!this.isMovingDown() && !this.isMovingUp())
+   }
+
+   moveUp()
+   {
+      if (this.isMovingUp())
+      {
+         // Check for roof
+         if (this.y + this.yVelocity > 0)
+         {
+            this.y += this.yVelocity;
+         }
+         else
+         {
+            this.y = 1;
+            this.yVelocity = 0;
+         }
+      }
+   }
+
+   moveDown()
+   {
+      if (this.isMovingDown())
+      {
+         // First check for floor
+         if (this.y + this.h + this.yVelocity < height)
+         {
+            this.y += this.yVelocity;
+         }
+         else
+         {
+            this.y = height - this.h;
+            this.yVelocity = 0;
+         }
+      }
    }
 
    moveRight()
@@ -54,25 +98,6 @@ class Player
          else
          {
             this.x = width - this.w - 1;
-         }
-
-         for (let p of this.platforms)
-         {
-            // Check if players is within height of platform
-            if (
-               (this.y > p.y && this.y < p.y + p.h) ||
-               (this.y + this.h > p.y && this.y + this.h < p.y + p.h)
-               )
-               {
-                  if (this.x + this.w + this.xVelocity + 1 < p.x)
-                  {
-                     this.x += this.xVelocity;
-                  }
-                  else if (this.x < p.x + p.w)
-                  {
-                     this.x = p.x - this.w - 1;
-                  }
-               }
          }
       }
    }
@@ -89,25 +114,6 @@ class Player
          else
          {
             this.x = 2;
-         }
-
-         for (let p of this.platforms)
-         {
-            // Check if players is within height of platform
-            if (
-               (this.y > p.y && this.y < p.y + p.h) ||
-               (this.y + this.h > p.y && this.y + this.h < p.y + p.h)
-               )
-               {
-                  if (this.x + this.xVelocity > p.x + p.w - 1)
-                  {
-                     this.x += this.xVelocity;
-                  }
-                  else if (this.x + this.w > p.x)
-                  {
-                     this.x = p.x + p.w + 1;
-                  }
-               }
          }
       }
    }
@@ -172,7 +178,8 @@ class Player
    {
       if (this.isGrounded())
       {
-         this.y += -this.jumpHeight;
+         this.yVelocity = -this.jumpVelocity;
+         this.onPlatform = false;
       }
    }
 }

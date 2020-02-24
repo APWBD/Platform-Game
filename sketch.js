@@ -1,6 +1,7 @@
 let player;
 let platforms = [];
 let coins = [];
+let keys = [];
 
 function setup()
 {
@@ -22,6 +23,11 @@ function setup()
    coins.push(new Coin(125, height-211, 20, 10));
    coins.push(new Coin(175, height-111, 20, 10));
    coins.push(new Coin(225, height-161, 20, 10));
+
+   keys.push(new Key(width - 150, height - 15));
+   keys.push(new Key(width - 150, 15));
+   keys.push(new Key(width - 50, 65));
+   keys.push(new Key(50, 150));
 }
 
 function draw()
@@ -29,9 +35,27 @@ function draw()
    background("white");
    player.show();
 
+   let i = 0;
+   for (let key of keys)
+   {
+      if (key.checkCollision(player))
+      {
+         player.addKey(key);
+         key.taken = true;
+         keys.splice(i, 1);
+      }
+
+      if (!key.taken)
+      {
+         key.show();
+      }
+      i++;
+   }
+
    fill("black");
    textAlign(RIGHT);
-   textSize(16);
+   textSize(15);
+   noStroke();
    text(`Coins: ${player.numberCoins}`, width - 10, 20);
 
    for (let coin of coins)

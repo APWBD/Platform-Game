@@ -15,6 +15,12 @@ class Player
       this.gMax = 5;
       this.onPlatform = false;
       this.numberCoins = 0;
+      this.keys = [];
+   }
+
+   addKey(key)
+   {
+      this.keys.push(key);
    }
 
    addCoin(amount)

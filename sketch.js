@@ -1,48 +1,136 @@
+let gameSetupJSON;
+let gameStatsJSON;
+let gameLevelsJSON;
+
+let offset;
+let currentLevel;
+
 let player;
-let platforms = [];
-let coins = [];
-let keys = [];
+
+let stats = {};
+let level = {};
+let s = 1; // Scale variable, used in player for collision detection and in draw for scaling
+
+function createLevel(l)
+{
+   const levelJSON = gameLevelsJSON[l];
+
+   level.Platforms = [];
+   for (let p of levelJSON.Platforms)
+   {
+      level.Platforms.push(new Platform(p.x + offset.x, p.y + offset.y, p.w, p.h));
+   }
+
+   level.Keys = [];
+   for (let k of levelJSON.Keys)
+   {
+      level.Keys.push(new Key(k.x + offset.x, k.y + offset.y, k.scale, k.color, k.name));
+   }
+
+   level.Coins = [];
+   for (let c of levelJSON.Coins)
+   {
+      level.Coins.push(new Coin(c.x + offset.x, c.y + offset.y, c.r));
+   }
+}
+
+function createStatsArea()
+{
+   const coin = gameStatsJSON.Coin;
+   stats.Coin = new Coin(coin.x, coin.y, coin.r);
+
+   stats.Hearts = [];
+   for (let h of gameStatsJSON.Hearts)
+   {
+      stats.Hearts.push(new Heart(h.x, h.y, h.size, h.scale));
+   }
+
+   stats.Keys = [];
+   for (let k of gameStatsJSON.Keys)
+   {
+      stats.Keys.push(new Key(k.x, k.y, k.scale, k.color, k.name));
+   }
+}
+
+function preload()
+{
+   gameSetupJSON = loadJSON("/GameSetup.json");
+   gameStatsJSON = loadJSON("/GameStats.json");
+   gameLevelsJSON = loadJSON("/GameLevels.json");
+}
 
 function setup()
 {
-   createCanvas(400, 300);
+   offset = gameSetupJSON.offset;
+
+   let scaleX = (windowWidth) / (400 + offset.x + 50);
+   let scaleY = (windowHeight) / (300 + offset.y + 50);
+   s = (scaleX < scaleY) ? scaleX : scaleY;
+
+   createCanvas(400*s + offset.x*s, 300*s + offset.y * s);
    let canvas = document.getElementById("defaultCanvas0");
    canvas.style.border = "1px solid black";
 
-   player = new Player(1, height-31, 20, 20, platforms);
+   // Stats Begins
+   createStatsArea();
+   // Stats Ends
 
-   platforms.push(new Platform(100, 100, 50, 10));
-   platforms.push(new Platform(100, height - 60, 50, 10));
-   platforms.push(new Platform(150, height - 100, 50, 10));
-   platforms.push(new Platform(200, height - 150, 50, 10));
+   currentLevel = 1;
+   createLevel(currentLevel);
 
-   coins.push(new Coin(width - 30, height-10, 20, 10));
-   coins.push(new Coin(width - 53, height-10, 20, 10));
-   coins.push(new Coin(width - 41, height-60, 20, 10));
-   coins.push(new Coin(125, height-71, 20, 10));
-   coins.push(new Coin(125, height-211, 20, 10));
-   coins.push(new Coin(175, height-111, 20, 10));
-   coins.push(new Coin(225, height-161, 20, 10));
+   player = new Player(100, 500, 24, 30, level.Platforms);
+}
 
-   keys.push(new Key(width - 150, height - 15));
-   keys.push(new Key(width - 150, 15));
-   keys.push(new Key(width - 50, 65));
-   keys.push(new Key(50, 150));
+function showStatsArea()
+{
+   fill(255);
+   stroke("black");
+   rect(0 - 1, 0 - 1, width + 2, offset.y);
+
+   stats.Coin.show();
+   fill("black");
+   textAlign(LEFT);
+   textSize(20);
+   noStroke();
+   text(`${player.numberCoins}`, 40, 27);
+
+   for (let key of stats.Keys)
+   {
+      key.show();
+      for (let k of player.keys)
+      {
+         if (k.name == key.name)
+         {
+            key.color = k.color;
+            break;
+         }
+      }
+   }
+
+   for (let i = 0; i < player.lives; i++)
+   {
+      stats.Hearts[i].show();
+   }
 }
 
 function draw()
 {
+   scale(s);
    background("white");
+
+   // Show stats area
+   showStatsArea();
+
    player.show();
 
    let i = 0;
-   for (let key of keys)
+   for (let key of level.Keys)
    {
       if (key.checkCollision(player))
       {
          player.addKey(key);
          key.taken = true;
-         keys.splice(i, 1);
+         level.Keys.splice(i, 1);
       }
 
       if (!key.taken)
@@ -52,26 +140,20 @@ function draw()
       i++;
    }
 
-   fill("black");
-   textAlign(RIGHT);
-   textSize(15);
-   noStroke();
-   text(`Coins: ${player.numberCoins}`, width - 10, 20);
-
-   for (let coin of coins)
+   for (let coin of level.Coins)
    {
       coin.checkCollision(player);
       coin.show();
    }
    transferCoinsTakenToPlayer();
 
-   for (let p of platforms)
+   for (let p of level.Platforms)
    {
       p.show();
    }
 
    let collision = false;
-   for (let p of platforms)
+   for (let p of level.Platforms)
    {
       if (p.checkCollision(player))
       {
@@ -82,7 +164,7 @@ function draw()
 
    if (!collision)
    {
-      for (let p of platforms)
+      for (let p of level.Platforms)
       {
          if (p.onPlatform(player))
          {
@@ -91,19 +173,19 @@ function draw()
          }
          player.onPlatform = false;
       }
-   }
 
-   player.move();
+      player.move();
+   }
 }
 
 function transferCoinsTakenToPlayer()
 {
-   for (let i = coins.length -1; i >= 0; i--)
+   for (let i = level.Coins.length -1; i >= 0; i--)
    {
-      if (coins[i].taken)
+      if (level.Coins[i].taken)
       {
          player.addCoin(1);
-         coins.splice(i, 1);
+         level.Coins.splice(i, 1);
       }
    }
 }

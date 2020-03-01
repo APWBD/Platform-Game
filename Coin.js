@@ -1,9 +1,10 @@
 class Coin extends Item
 {
-   constructor(x, y, w, h)
+   constructor(x, y, r)
    {
-      super(x,y, w, h);
+      super(x, y);
       this.taken = false;
+      this.r = r;
    }
 
    show()
@@ -13,13 +14,13 @@ class Coin extends Item
          stroke("black");
          strokeWeight(1);
          fill("gold");
-         circle(this.x, this.y, this.w);
+         circle(this.x, this.y, this.r);
       }
    }
 
    checkCollision(p)
    {
-      let radius = this.w / 2;
+      let radius = this.r / 2;
       let left = p.x;
       let right = p.x + p.w;
       let top = p.y;

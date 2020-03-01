@@ -15,7 +15,26 @@ class Player
       this.gMax = 5;
       this.onPlatform = false;
       this.numberCoins = 0;
+      this.lives = 3;
       this.keys = [];
+
+      this.showCostume = 1;
+      this.customeTimer = 0;
+   }
+
+   addLive()
+   {
+      this.lives++;
+   }
+
+   removeLife()
+   {
+      this.lives--;
+   }
+
+   isAlive()
+   {
+      return (this.lives > 0);
    }
 
    addKey(key)
@@ -30,9 +49,24 @@ class Player
 
    show()
    {
-      fill("grey");
-      stroke("black");
-      rect(this.x, this.y, this.w, this.h);
+      if (!this.isMovingLeft() && !this.isMovingRight())
+      {
+         if (this.showCostume == 1)
+         {
+            this.showIdleOne();
+         }
+         else
+         {
+            this.showIdleTwo();
+         }
+
+         if (this.customeTimer % 15 == 0)
+         {
+            this.showCostume = (this.showCostume == 1) ? 2 : 1;
+            this.customeTimer = 0;
+         }
+         this.customeTimer++;
+      }
    }
 
    move()
@@ -69,13 +103,13 @@ class Player
       if (this.isMovingUp())
       {
          // Check for roof
-         if (this.y + this.yVelocity > 0)
+         if (this.y + this.yVelocity > 0 + offset.y)
          {
             this.y += this.yVelocity;
          }
          else
          {
-            this.y = 1;
+            this.y = 1 + offset.y;
             this.yVelocity = 0;
          }
       }
@@ -86,13 +120,13 @@ class Player
       if (this.isMovingDown())
       {
          // First check for floor
-         if (this.y + this.h + this.yVelocity < height)
+         if (this.y + this.h + this.yVelocity < height/s)
          {
             this.y += this.yVelocity;
          }
          else
          {
-            this.y = height - this.h;
+            this.y = height/s - this.h;
             this.yVelocity = 0;
          }
       }
@@ -103,13 +137,13 @@ class Player
       if (this.isMovingRight())
       {
          // First check for the wall
-         if (this.x + this.w + this.xVelocity < width)
+         if (this.x + this.w + this.xVelocity < width/s)
          {
             this.x += this.xVelocity;
          }
          else
          {
-            this.x = width - this.w - 1;
+            this.x = width/s - this.w - 1*s;
          }
       }
    }
@@ -125,7 +159,7 @@ class Player
          }
          else
          {
-            this.x = 2;
+            this.x = 2*s;
          }
       }
    }
@@ -193,5 +227,115 @@ class Player
          this.yVelocity = -this.jumpVelocity;
          this.onPlatform = false;
       }
+   }
+
+   showIdleOne()
+   {
+      const tileSize = 3;
+
+      // Hat
+      noStroke();
+      let xPos = this.x + ((24-tileSize)/2);
+      fill("green");
+      square(xPos, this.y, tileSize);
+      stroke("green");
+      line(xPos, this.y + tileSize, xPos + tileSize, this.y + tileSize);
+
+      // Head
+      fill(255);
+      strokeWeight(1);
+      stroke(0);
+      circle(xPos + tileSize/2, this.y + tileSize*2, tileSize*2);
+      noStroke();
+      // Eyes
+      fill(0);
+      circle(xPos - tileSize/2 + 4, this.y + tileSize + 2, 1);
+      circle(xPos - tileSize/2 + 2, this.y + tileSize + 2, 1);
+      // Nose
+      fill("orange");
+      circle(xPos - tileSize/2 + 3, this.y + tileSize + 3, 1);
+
+      // Mouth
+      strokeWeight(1);
+      stroke(0);
+      line(xPos - tileSize/2 + 2, this.y + 2*tileSize+1, xPos - tileSize/2 + 4, this.y + 2*tileSize+1);
+
+      // Body
+      fill(255);
+      strokeWeight(1);
+      ellipse(xPos + tileSize/2, this.y + 6*tileSize, 4*tileSize, 6*tileSize);
+
+      // Right Arm
+      line(xPos - tileSize - 1, this.y + 5*tileSize, xPos - tileSize - 4, this.y + 7*tileSize);
+      line(xPos - tileSize - 2.6, this.y + 5*tileSize + 3, xPos - tileSize - 5, this.y + 7*tileSize);
+      line(xPos - tileSize - 2.6, this.y + 5*tileSize + 3, xPos - tileSize - 2, this.y + 7*tileSize);
+
+      // Left Arm
+      line(xPos + 2*tileSize + 1, this.y + 5*tileSize, xPos + tileSize + 6, this.y + 7*tileSize);
+      line(xPos + 2*tileSize + 2.1, this.y + 5*tileSize + 3, xPos + tileSize + 5, this.y + 7*tileSize);
+      line(xPos + 2*tileSize + 2.1, this.y + 5*tileSize + 3, xPos + tileSize + 7, this.y + 7*tileSize);
+
+      // Right Leg
+      line(xPos, this.y + 9*tileSize, xPos - 1, this.y + 10*tileSize - 1);
+      line(xPos - 1, this.y + 10*tileSize - 1, xPos - 2, this.y + 10*tileSize - 1);
+
+      // Left Leg
+      line(xPos + tileSize, this.y + 9*tileSize, xPos + tileSize + 1, this.y + 10*tileSize - 1);
+      line(xPos + tileSize + 1, this.y + 10*tileSize - 1, xPos + tileSize + 2, this.y + 10*tileSize - 1);
+   }
+
+   showIdleTwo()
+   {
+      const tileSize = 3;
+
+      // Hat
+      noStroke();
+      let xPos = this.x + ((24-tileSize)/2);
+      fill("green");
+      square(xPos, this.y, tileSize);
+      stroke("green");
+      line(xPos, this.y + tileSize, xPos + tileSize, this.y + tileSize);
+
+      // Head
+      fill(255);
+      strokeWeight(1);
+      stroke(0);
+      circle(xPos + tileSize/2, this.y + tileSize*2, tileSize*2);
+      noStroke();
+      // Eyes
+      fill(0);
+      circle(xPos - tileSize/2 + 4, this.y + tileSize + 2, 1);
+      circle(xPos - tileSize/2 + 2, this.y + tileSize + 2, 1);
+      // Nose
+      fill("orange");
+      circle(xPos - tileSize/2 + 3, this.y + tileSize + 3, 1);
+
+      // Mouth
+      strokeWeight(1);
+      stroke(0);
+      line(xPos - tileSize/2 + 2, this.y + 2*tileSize+1, xPos - tileSize/2 + 4, this.y + 2*tileSize+1);
+
+      // Body
+      fill(255);
+      strokeWeight(1);
+      ellipse(xPos + tileSize/2, this.y + 6*tileSize, 4*tileSize, 6*tileSize);
+
+      // Right Arm
+      line(xPos - tileSize - 1, this.y + 5*tileSize, xPos - tileSize - 6, this.y + 5*tileSize);
+      line(xPos - tileSize - 3, this.y + 5*tileSize, xPos - tileSize - 6, this.y + 4*tileSize);
+      line(xPos - tileSize - 3, this.y + 5*tileSize, xPos - tileSize - 6, this.y + 6*tileSize);
+
+      // Left Arm
+      line(xPos + 2*tileSize + 1, this.y + 5*tileSize, xPos + tileSize + 9, this.y + 5*tileSize);
+      line(xPos + 2*tileSize + 3, this.y + 5*tileSize, xPos + tileSize + 9, this.y + 4*tileSize);
+      line(xPos + 2*tileSize + 3, this.y + 5*tileSize, xPos + tileSize + 9, this.y + 6*tileSize);
+
+      // Right Leg
+      line(xPos, this.y + 9*tileSize, xPos - 1, this.y + 10*tileSize - 1);
+      line(xPos - 1, this.y + 10*tileSize - 1, xPos - 2, this.y + 10*tileSize - 1);
+
+      // Left Leg
+      line(xPos + tileSize, this.y + 9*tileSize, xPos + tileSize + 1, this.y + 10*tileSize - 1);
+      line(xPos + tileSize + 1, this.y + 10*tileSize - 1, xPos + tileSize + 2, this.y + 10*tileSize - 1);
    }
 }

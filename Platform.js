@@ -10,8 +10,8 @@ class Platform
 
    show()
    {
-      fill("brown");
-      stroke("black");
+      fill(88);
+      noStroke();
       rect(this.x, this.y, this.w, this.h);
    }
 
@@ -25,16 +25,16 @@ class Platform
 
    checkCollision(p)
    {
-      if (p.x + p.xVelocity < this.x + this.w &&
-         p.x + p.w + p.xVelocity > this.x &&
-         p.y + p.yVelocity < this.y + this.h &&
-         p.y + p.h + p.yVelocity > this.y)
+      if (p.x < this.x + this.w &&
+         p.x + p.w > this.x &&
+         p.y < this.y + this.h &&
+         p.y + p.h > this.y)
       {
          if (p.isMovingUp())
          {
             if (p.y + p.h > this.y + this.h)
             {
-               p.y = this.y + this.h + 1;
+               p.y = this.y + this.h;
             }
          }
 
@@ -52,6 +52,7 @@ class Platform
             if (p.x < this.x)
             {
                p.x = this.x - p.w;
+               p.xVelocity = 0;
             }
          }
 
@@ -60,11 +61,12 @@ class Platform
             if (p.x + p.w > this.x + this.w)
             {
                p.x = this.x + this.w;
+               p.xVelocity = 0;
             }
          }
 
-         p.xVelocity = 0;
          p.yVelocity = 0;
+
          return true; // Tell caller that a collision has happened
       }
    }

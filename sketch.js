@@ -85,7 +85,7 @@ function showStatsArea()
 {
    fill(255);
    stroke("black");
-   rect(0 - 1, 0 - 1, width + 2, offset.y);
+   rect(0 - 1, 0 - 1, width / s + 2, offset.y);
 
    stats.Coin.show();
    fill("black");

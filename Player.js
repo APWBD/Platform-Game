@@ -49,6 +49,13 @@ class Player
 
    show()
    {
+      if (this.customeTimer % 15 == 0)
+      {
+         this.showCostume = (this.showCostume == 1) ? 2 : 1;
+         this.customeTimer = 0;
+      }
+      this.customeTimer++;
+
       if (!this.isMovingLeft() && !this.isMovingRight())
       {
          if (this.showCostume == 1)
@@ -59,13 +66,28 @@ class Player
          {
             this.showIdleTwo();
          }
-
-         if (this.customeTimer % 15 == 0)
+      }
+      else if (this.isMovingRight())
+      {
+         if (this.showCostume == 1)
          {
-            this.showCostume = (this.showCostume == 1) ? 2 : 1;
-            this.customeTimer = 0;
+            this.showRightOne();
          }
-         this.customeTimer++;
+         else
+         {
+            this.showRightTwo();
+         }
+      }
+      else if (this.isMovingLeft())
+      {
+         if (this.showCostume == 1)
+         {
+            this.showLeftOne();
+         }
+         else
+         {
+            this.showLeftTwo();
+         }
       }
    }
 
@@ -337,5 +359,201 @@ class Player
       // Left Leg
       line(xPos + tileSize, this.y + 9*tileSize, xPos + tileSize + 1, this.y + 10*tileSize - 1);
       line(xPos + tileSize + 1, this.y + 10*tileSize - 1, xPos + tileSize + 2, this.y + 10*tileSize - 1);
+   }
+
+   showRightOne()
+   {
+      // Nose
+      stroke("orange");
+      fill("orange");
+      triangle(this.x + 17.5, this.y + 5, this.x + 17.5, this.y + 6, this.x + 19, this.y + 5.5);
+
+      // Head
+      stroke(0);
+      fill(255);
+      circle(this.x + 15, this.y + 5, 5);
+
+      // Eye
+      fill(0);
+      noStroke();
+      circle(this.x + 16, this.y + 4.7, 1);
+
+      // Hat
+      noStroke();
+      fill("green");
+      rect(this.x + 13.5, this.y, 2.5, 2.5);
+      stroke("green");
+      line(this.x + 12, this.y + 2.5, this.x + 17, this.y + 2.5);
+
+      // Body
+      stroke(0);
+      fill(255);
+      ellipse(this.x + 15, this.y + 17.5, 15, 18);
+
+      // Pocket
+      stroke(99);
+      strokeWeight(0.5);
+      line(this.x + 17.5, this.y + 18, this.x + 15, this.y + 21.5);
+
+      // Right Arm
+      strokeWeight(1);
+      stroke(0);
+      line(this.x + 15, this.y + 15, this.x + 13, this.y + 18);
+      line(this.x + 13, this.y + 18, this.x + 16, this.y + 20);
+
+      // Right Leg
+      line(this.x + 15, this.y + 26.5, this.x + 15, this.y + 30);
+      line(this.x + 16, this.y + 30, this.x + 18, this.y + 30);
+
+      // Left Leg
+      line(this.x + 15, this.y + 26.5, this.x + 11, this.y + 27);
+      line(this.x + 11, this.y + 27, this.x + 13, this.y + 29);
+   }
+
+   showRightTwo()
+   {
+      // Nose
+      stroke("orange");
+      fill("orange");
+      triangle(this.x + 17.5, this.y + 5, this.x + 17.5, this.y + 6, this.x + 19, this.y + 5.5);
+
+      // Head
+      stroke(0);
+      fill(255);
+      circle(this.x + 15, this.y + 5, 5);
+
+      // Eye
+      fill(0);
+      noStroke();
+      circle(this.x + 16, this.y + 4.7, 1);
+
+      // Hat
+      noStroke();
+      fill("green");
+      rect(this.x + 13.5, this.y, 2.5, 2.5);
+      stroke("green");
+      line(this.x + 12, this.y + 2.5, this.x + 17, this.y + 2.5);
+
+      // Body
+      stroke(0);
+      fill(255);
+      ellipse(this.x + 15, this.y + 17.5, 15, 18);
+
+      // Pocket
+      stroke(99);
+      strokeWeight(0.5);
+      line(this.x + 17.5, this.y + 18, this.x + 15, this.y + 21.5);
+
+      // Right Arm
+      strokeWeight(1);
+      stroke(0);
+      line(this.x + 15, this.y + 15, this.x + 13, this.y + 18);
+      line(this.x + 13, this.y + 18, this.x + 16, this.y + 20);
+
+      // Right Leg
+      line(this.x + 15, this.y + 26.5, this.x + 18, this.y + 28);
+      line(this.x + 18, this.y + 28, this.x + 20, this.y + 27);
+
+      // Left Leg
+      line(this.x + 15, this.y + 26.5, this.x + 15, this.y + 30);
+      line(this.x + 15, this.y + 30, this.x + 18, this.y + 30);
+   }
+
+   showLeftOne()
+   {
+      // Nose
+      stroke("orange");
+      fill("orange");
+      triangle(this.x + 5, this.y + 5, this.x + 5, this.y + 6, this.x + 3.5, this.y + 5.5);
+
+      // Head
+      stroke(0);
+      fill(255);
+      circle(this.x + 7.5, this.y + 5, 5);
+
+      // Eye
+      fill(0);
+      noStroke();
+      circle(this.x + 6.5, this.y + 4.7, 1);
+
+      // Hat
+      noStroke();
+      fill("green");
+      rect(this.x + 6, this.y, 2.5, 2.5);
+      stroke("green");
+      line(this.x + 4.5, this.y + 2.5, this.x + 9.5, this.y + 2.5);
+
+      // Body
+      stroke(0);
+      fill(255);
+      ellipse(this.x + 7.5, this.y + 17.5, 15, 18);
+
+      // Pocket
+      stroke(99);
+      strokeWeight(0.5);
+      line(this.x + 5, this.y + 18, this.x + 7, this.y + 21.5);
+
+      // Left Arm
+      strokeWeight(1);
+      stroke(0);
+      line(this.x + 7.5, this.y + 15, this.x + 9, this.y + 18);
+      line(this.x + 9, this.y + 18, this.x + 7, this.y + 20);
+
+      // Right Leg
+      line(this.x + 7.5, this.y + 26.5, this.x + 7.5, this.y + 30);
+      line(this.x + 7.5, this.y + 30, this.x + 5.5, this.y + 30);
+
+      // Left Leg
+      line(this.x + 7.5, this.y + 26.5, this.x + 11.5, this.y + 27);
+      line(this.x + 11.5, this.y + 27, this.x + 12, this.y + 29);
+   }
+
+   showLeftTwo()
+   {
+      // Nose
+      stroke("orange");
+      fill("orange");
+      triangle(this.x + 5, this.y + 5, this.x + 5, this.y + 6, this.x + 3.5, this.y + 5.5);
+
+      // Head
+      stroke(0);
+      fill(255);
+      circle(this.x + 7.5, this.y + 5, 5);
+
+      // Eye
+      fill(0);
+      noStroke();
+      circle(this.x + 6.5, this.y + 4.7, 1);
+
+      // Hat
+      noStroke();
+      fill("green");
+      rect(this.x + 6, this.y, 2.5, 2.5);
+      stroke("green");
+      line(this.x + 4.5, this.y + 2.5, this.x + 9.5, this.y + 2.5);
+
+      // Body
+      stroke(0);
+      fill(255);
+      ellipse(this.x + 7.5, this.y + 17.5, 15, 18);
+
+      // Pocket
+      stroke(99);
+      strokeWeight(0.5);
+      line(this.x + 5, this.y + 18, this.x + 7, this.y + 21.5);
+
+      // Left Arm
+      strokeWeight(1);
+      stroke(0);
+      line(this.x + 7.5, this.y + 15, this.x + 9, this.y + 18);
+      line(this.x + 9, this.y + 18, this.x + 7, this.y + 20);
+
+      // Right Leg
+      line(this.x + 7.5, this.y + 26.5, this.x + 9.5, this.y + 30);
+      line(this.x + 9.5, this.y + 30, this.x + 7.5, this.y + 30);
+
+      // Left Leg
+      line(this.x + 7.5, this.y + 26.5, this.x + 4.5, this.y + 29);
+      line(this.x + 4.5, this.y + 29, this.x + 3, this.y + 27);
    }
 }
